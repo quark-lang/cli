@@ -1,0 +1,4 @@
+{
+  (import "io.qrk")
+  (print "Hello world")
+}
