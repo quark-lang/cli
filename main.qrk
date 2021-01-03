@@ -1,4 +1,4 @@
 {
   (import "io.qrk")
-  (print "Hello world")
+  (print "Les arguments sont:" args)
 }
