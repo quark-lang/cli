@@ -2,5 +2,5 @@
   (import "io.qrk")
   (import "fs.ts")
   (let path (fs:join fs:cwd (index args 0)))
-  (exec (fs:read path) fs:cwd (fs:dir (index args 0)))
+  (exec (fs:read path) path)
 }
