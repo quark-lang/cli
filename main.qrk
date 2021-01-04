@@ -4,7 +4,7 @@
   # Checking if file specified
   (if (!= (index args 0) none) {
     (let path (fs:join fs:cwd (index args 0)))
-    (exec (fs:read path) path)
+    (exec (fs:read path) (fs:dir path))
   } {
     (let replPath (fs:join root "sample" "repl.qrk"))
     (exec (fs:read replPath) fs:cwd)
