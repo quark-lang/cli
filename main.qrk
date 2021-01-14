@@ -9,7 +9,7 @@
     }
     {
       # Else running REPL
-      (let replPath (fs:join fs:root "sample" "repl.qrk"))
+      (let replPath (fs:join "sample" "repl.qrk"))
       (std:run (fs:read replPath) replPath)
     }
   )
