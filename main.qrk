@@ -1,6 +1,4 @@
 {
-  (import "std.ts")
-  (import "fs.ts")
   # Taking first argument as file
   (let file (index std:args 0))
   (if (!= file none)
