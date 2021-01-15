@@ -1,0 +1,7 @@
+{
+  (print "Quark" quark:release)
+  (while 1 {
+    (let code (input ">>> "))
+    (std:exec code)
+  })
+}
