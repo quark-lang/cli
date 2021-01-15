@@ -1,17 +1,15 @@
 {
   # Taking first argument as file
   (let file (index std:args 0))
-  (let path)
   (if (!= file none)
     {
       # Executing if file specified
-      (set path (fs:join fs:cwd file))
+      (let path (fs:join fs:cwd file))
       (std:run (fs:read path) path)
     }
     {
       # Else running REPL
-      (set path (fs:join "cli" "repl.qrk"))
-      (std:run (fs:read path) path)
+      (import "repl.qrk")
     }
   )
 }
