@@ -1,15 +1,38 @@
 {
-  # Taking first argument as file
-  (let file (index std:args 0))
-  (if (!= file none)
-    {
-      # Executing if file specified
-      (let path (fs:join fs:cwd file))
-      (std:run (fs:read path) path)
-    }
-    {
-      # Else running REPL
-      (import "repl.qrk")
-    }
-  )
+  # Taking first argument as command
+  (let command (index std:args 0))
+
+  # Checking if command is not defined and returning REPL
+  (if (or (= command none) (= command "repl")) (return (import "repl.qrk")))
+
+  # Checking for Help command
+  (if (or (= command "-h") (= command "--help")) {
+    # Printing headline
+    (print (white (+ "Quark " quark:release)))
+    (print (gray "An interpreted Lisp programming language written in Typescript.") newline)
+    (print "Website:" "https://quark-lang.dev/")
+    (print "Repository:" "https://github/quark-lang/" newline)
+
+    # Printing commands
+    (print (bold "COMMANDS:"))
+    (print "  " "- run" "    " (gray "Run a Quark program"))
+    (print "  " "- test" "   " (gray "Run tests"))
+    (print "  " "- repl" "   " (gray "Start new REPL session"))
+
+    (return none)
+  })
+
+  # Checking for run command
+  (let path (fs:join fs:cwd command))
+  (let content (fs:read path))
+  (if (or (!= content none) (= command "run")) {
+    (if (= command "run")
+      {
+        (let path (fs:join fs:cwd (index std:args 1)))
+        (let content (fs:read path))
+        (std:run content path)
+      }
+      (std:run content path)
+    )
+  })
 }
