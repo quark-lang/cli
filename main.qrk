@@ -9,9 +9,9 @@
   (if (or (= command "-h") (= command "--help")) {
     # Printing headline
     (print (white (+ "Quark " quark:release)))
-    (print (gray "An interpreted Lisp programming language written in Typescript.") newline)
+    (print (gray "An interpreted Lisp programming language written in Typescript.\n"))
     (print "Website:" "https://quark-lang.dev/")
-    (print "Repository:" "https://github/quark-lang/" newline)
+    (print "Repository:" "https://github/quark-lang/\n")
 
     # Printing commands
     (print (bold "COMMANDS:"))
