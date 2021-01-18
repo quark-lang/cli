@@ -1,10 +1,24 @@
 {
   # Taking first argument as command
+  (import "configuration.qrk")
+  (let file ".quarkrc")
+
+  (let content (fs:read (fs:join fs:root file)))
+  (let config (parseConfiguration content))
+  (let version (getVersion config))
+
   (let command (index std:args 0))
+
+  (if (or (= command "update") (= command "upgrade")) {
+    (let latestRelease quark:release)
+
+    (if (!= version latestRelease) {
+      (print "New release found:" latestRelease)
+    } (return (print "No new releases found...")))
+  })
 
   # Checking if command is not defined and returning REPL
   (if (or (= command none) (= command "repl")) (return (import "repl.qrk")))
-
   # Checking for Help command
   (if (or (= command "-h") (= command "--help")) {
     # Printing headline
