@@ -1,14 +1,9 @@
 {
-  (import "configuration.qrk")
-  (let file ".quarkrc")
-
-  (let content (fs:read (fs:join fs:root file)))
-  (let config (parseConfiguration content))
-  (let version (getVersion config))
-
-  (print "Quark" version)
-  (while 1 {
-    (let code (input ">>> "))
-    (std:exec code)
-  })
+  (let repl (fn (version) {
+    (print "Quark" version)
+    (while 1 {
+      (let code (input ">>> "))
+      (std:exec code)
+    })
+  }))
 }
