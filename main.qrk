@@ -1,20 +1,11 @@
 {
   # Taking first argument as command
-  (import "configuration.qrk")
-
-  (let version (fn () {
-    (let file ".quarkrc")
-
-    (let content (fs:read (fs:join fs:root file)))
-    (let config (parseConfiguration content))
-    (return (getVersion config))
-  }))
-
+  (let configuration (config:parse (fs:join fs:root ".quarkrc")))
+  (let version (index (index configuration 2) 1))
   (let command (index std:args 0))
 
   (if (or (= command "update") (= command "upgrade")) {
     (let latestRelease quark:release)
-
     (if (!= version latestRelease) {
       (print "New release found:" latestRelease)
     } (return (print "No new releases found...")))
@@ -23,9 +14,10 @@
   # Checking if command is not defined and returning REPL
   (if (or (= command none) (= command "repl")) {
     (import "repl.qrk")
-    (repl (version))
+    (repl version)
     (return none)
   })
+
   # Checking for Help command
   (if (or (= command "-h") (= command "--help")) {
     # Printing headline
@@ -39,6 +31,7 @@
     (print "  " "- run" "    " (gray "Run a Quark program"))
     (print "  " "- test" "   " (gray "Run tests"))
     (print "  " "- repl" "   " (gray "Start new REPL session"))
+    (print "  " "- update" " " (gray "Update Quark to latest found release"))
 
     (return none)
   })
