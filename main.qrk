@@ -40,16 +40,19 @@
   (let path (fs:join fs:cwd command))
   (let content (fs:read path))
 
+  (let run (fn (file) {
+    (let path (fs:join fs:cwd file))
+    (let content (fs:read path))
+    (return (std:run content path))
+  }))
+
   (if (or (!= content none) (= command "run")) {
     # Checking if first argument is file
     (if (= command "run")
-      {
-        # Running script according to second argument
-        (let path (fs:join fs:cwd (index std:args 1)))
-        (let content (fs:read path))
-        (std:run content path)
-      }
+      (run (index std:args 1))
       (std:run content path)
     )
   })
+
+  (if (= command "test") (run (index std:args 1)))
 }
