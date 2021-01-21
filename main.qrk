@@ -54,5 +54,9 @@
     )
   })
 
-  (if (= command "test") (run (index std:args 1)))
+  (if (= command "test") {
+    (let src (index std:args 1))
+    (if (= src none) (return (print "No scripts have been specified!")))
+    (run src)
+  })
 }
