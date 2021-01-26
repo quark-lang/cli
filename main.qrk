@@ -14,7 +14,6 @@
 
     (let file ".quarkrc")
     (let content (fs:read (fs:join fs:root file)))
-    (let time (time:now))
     (let config (parseConfiguration content))
 
     (return (getProperty config "version"))
