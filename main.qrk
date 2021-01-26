@@ -1,7 +1,5 @@
 {
   # Taking first argument as command
-  (let configuration (config:parse (fs:join fs:root ".quarkrc")))
-  (let version (index (index configuration 2) 1))
   (let command (index std:args 0))
 
   (if (or (= command "update") (= command "upgrade")) {
@@ -11,17 +9,28 @@
     } (return (print "No new releases found...")))
   })
 
+  (let version (fn () {
+    (import "configuration.qrk")
+
+    (let file ".quarkrc")
+    (let content (fs:read (fs:join fs:root file)))
+    (let time (time:now))
+    (let config (parseConfiguration content))
+
+    (return (getProperty config "version"))
+  }))
+
   # Checking if command is not defined and returning REPL
   (if (or (= command none) (= command "repl")) {
     (import "repl.qrk")
-    (repl version)
+    (repl (version))
     (return none)
   })
 
   # Checking for Help command
   (if (or (= command "-h") (= command "--help")) {
     # Printing headline
-    (print (white (+ "Quark " version)))
+    (print (white (+ "Quark " (version))))
     (print (gray "An interpreted Lisp programming language written in Typescript.\n"))
     (print "Website:" "https://quark-lang.dev/")
     (print "Repository:" "https://github/quark-lang/\n")
