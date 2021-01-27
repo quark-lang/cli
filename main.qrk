@@ -1,5 +1,6 @@
 {
   # Taking first argument as command
+  (import "io.qrk")
   (let command (index std:args 0))
 
   (if (or (= command "update") (= command "upgrade")) {
