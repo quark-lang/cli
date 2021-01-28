@@ -27,45 +27,9 @@
     (return none)
   })
 
-  # Checking for Help command
-  (if (or (= command "-h") (= command "--help")) {
-    # Printing headline
-    (print (white (+ "Quark " (version))))
-    (print (gray "An interpreted Lisp programming language written in Typescript.\n"))
-    (print "Website:" "https://quark-lang.dev/")
-    (print "Repository:" "https://github/quark-lang/\n")
-
-    # Printing commands
-    (print (bold "COMMANDS:"))
-    (print "  " "- run" "    " (gray "Run a Quark program"))
-    (print "  " "- test" "   " (gray "Run tests"))
-    (print "  " "- repl" "   " (gray "Start new REPL session"))
-    (print "  " "- update" " " (gray "Update Quark to latest found release"))
-
-    (return none)
-  })
+  # Checking for help command
+  (if (or (= command "-h") (= command "--help")) (import "commands/help.qrk"))
 
   # Checking for run command
-  (let path (fs:join fs:cwd command))
-  (let content (fs:read path))
-
-  (let run (fn (file) {
-    (let path (fs:join fs:cwd file))
-    (let content (fs:read path))
-    (return (std:run content path))
-  }))
-
-  (if (or (!= content none) (= command "run")) {
-    # Checking if first argument is file
-    (if (= command "run")
-      (run (index std:args 1))
-      (std:run content path)
-    )
-  })
-
-  (if (= command "test") {
-    (let src (index std:args 1))
-    (if (= src none) (return (print "No scripts have been specified!")))
-    (run src)
-  })
+  (if (or (!= content none) (= command "run")) (import "commands/run.qrk"))
 }
