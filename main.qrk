@@ -1,6 +1,7 @@
 {
   # Taking first argument as command
   (import "io.qrk")
+  (import "list.qrk")
   (let command (index std:args 0))
 
   (if (or (= command "update") (= command "upgrade")) {
@@ -42,19 +43,11 @@
   }))
 
   (if (= command "run") {
-
     (let file (index std:args 1))
     (run file (path:isAbsolute file))
   })
 
-  (let slice (fn (arr start) {
-    (let res (list))
-    (foreach arr el {
-      (if (>= i start) (push res el))
-    })
-    (return res)
-  }))
-
+  # Use this command only inside scripts
   (if (= command "env") {
     (let file (index std:args 1))
     (set std:args (slice std:args 2))
