@@ -30,6 +30,34 @@
   # Checking for help command
   (if (or (= command "-h") (= command "--help")) (import "commands/help.qrk"))
 
+  # Checking for install command
+  (if (= command "install") (import "commands/install.qrk"))
+
   # Checking for run command
-  (if (or (!= content none) (= command "run")) (import "commands/run.qrk"))
+  (let run (fn (file absolute) {
+    (let path (fs:join fs:cwd file))
+    (let content (if (= (or absolute false) true) (fs:read file) (fs:read path)))
+
+    (return (std:run content path))
+  }))
+
+  (if (= command "run") {
+
+    (let file (index std:args 1))
+    (run file (path:isAbsolute file))
+  })
+
+  (let slice (fn (arr start) {
+    (let res (list))
+    (foreach arr el {
+      (if (>= i start) (push res el))
+    })
+    (return res)
+  }))
+
+  (if (= command "env") {
+    (let file (index std:args 1))
+    (set std:args (slice std:args 2))
+    (run file (path:isAbsolute file))
+  })
 }
