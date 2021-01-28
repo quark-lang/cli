@@ -6,12 +6,16 @@
   (let file_name (index std:args 1))
 
   (let script_name (index (split (fs:basename file_name) ".") 0))
-  (let install_path (fs:join fs:root script_name))
 
   (let script_content (+
     "#!/bin/sh\n"
     (+ "exec quark env " (+ script_path " $@"))
   ))
+
+  (let install_path)
+  (if (= (index (slice std:args 2) 0) "-o") {
+    (set install_path (fs:join fs:root (index (slice std:args 2) 1)))
+  } (set install_path (fs:join fs:root script_name)))
 
   (fs:write install_path script_content)
   (fs:chmod install_path 0o755)
