@@ -3,6 +3,8 @@
   (import "io.qrk")
   (import "list.qrk")
   (let command (index std:args 0))
+  (import "std.qrk")
+  (import "operators.qrk")
 
   (if (or (= command "update") (= command "upgrade")) {
     (let latestRelease quark:release)
@@ -12,8 +14,6 @@
   })
 
   (let version (fn () {
-    (import "configuration.qrk")
-
     (let file ".quarkrc")
     (let content (fs:read (fs:join fs:root file)))
     (let config (parseConfiguration content))
@@ -35,16 +35,24 @@
   (if (= command "install") (import "commands/install.qrk"))
 
   # Checking for run command
-  (let run (fn (file absolute) {
-    (let path (if (= (or absolute false) true) file (fs:join fs:cwd file)))
-    (let content (if (= (or absolute false) true) (fs:read file) (fs:read path)))
+  (if (!= none command) {
+    (let path (fs:join fs:cwd command))
+    (let content (fs:read path))
 
-    (return (std:run content path))
-  }))
+    (let run (fn (file) {
+      (let path (fs:join fs:cwd file))
+      (let content (fs:read path))
+      (return (std:run content path))
+    }))
 
-  (if (= command "run") {
-    (let file (index std:args 1))
-    (run file (path:isAbsolute file))
+    (if (or (!= content none) (= command "run")) {
+      # Checking if first argument is file
+      (if (= command "run")
+        (set path (fs:join (fs:dirname path) (index std:args 1)))
+      )
+      (import path)
+    })
+
   })
 
   # Use this command only inside scripts
