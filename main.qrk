@@ -1,5 +1,7 @@
 {
   # Taking first argument as command
+  (import "io.qrk")
+  (import "list.qrk")
   (let command (index std:args 0))
   (import "std.qrk")
   (import "operators.qrk")
@@ -26,23 +28,11 @@
     (return none)
   })
 
-  # Checking for Help command
-  (if (or (= command "-h") (= command "--help")) {
-    # Printing headline
-    (print (white (+ "Quark " (version))))
-    (print (gray "An interpreted Lisp programming language written in Typescript.\n"))
-    (print "Website:" "https://quark-lang.dev/")
-    (print "Repository:" "https://github/quark-lang/\n")
+  # Checking for help command
+  (if (or (= command "-h") (= command "--help")) (import "commands/help.qrk"))
 
-    # Printing commands
-    (print (bold "COMMANDS:"))
-    (print "  " "- run" "    " (gray "Run a Quark program"))
-    (print "  " "- test" "   " (gray "Run tests"))
-    (print "  " "- repl" "   " (gray "Start new REPL session"))
-    (print "  " "- update" " " (gray "Update Quark to latest found release"))
-
-    (return none)
-  })
+  # Checking for install command
+  (if (= command "install") (import "commands/install.qrk"))
 
   # Checking for run command
   (if (!= none command) {
@@ -62,11 +52,13 @@
       )
       (import path)
     })
+
   })
 
-  (if (= command "test") {
-    (let src (index std:args 1))
-    (if (= src none) (return (print "No scripts have been specified!")))
-    (run src)
+  # Use this command only inside scripts
+  (if (= command "env") {
+    (let file (index std:args 1))
+    (set std:args (slice std:args 2))
+    (run file (path:isAbsolute file))
   })
 }
