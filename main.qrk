@@ -1,6 +1,8 @@
 {
   # Taking first argument as command
   (let command (index std:args 0))
+  (import "std.qrk")
+  (import "operators.qrk")
 
   (if (or (= command "update") (= command "upgrade")) {
     (let latestRelease quark:release)
@@ -10,8 +12,6 @@
   })
 
   (let version (fn () {
-    (import "configuration.qrk")
-
     (let file ".quarkrc")
     (let content (fs:read (fs:join fs:root file)))
     (let config (parseConfiguration content))
@@ -45,21 +45,23 @@
   })
 
   # Checking for run command
-  (let path (fs:join fs:cwd command))
-  (let content (fs:read path))
-
-  (let run (fn (file) {
-    (let path (fs:join fs:cwd file))
+  (if (!= none command) {
+    (let path (fs:join fs:cwd command))
     (let content (fs:read path))
-    (return (std:run content path))
-  }))
 
-  (if (or (!= content none) (= command "run")) {
-    # Checking if first argument is file
-    (if (= command "run")
-      (run (index std:args 1))
-      (std:run content path)
-    )
+    (let run (fn (file) {
+      (let path (fs:join fs:cwd file))
+      (let content (fs:read path))
+      (return (std:run content path))
+    }))
+
+    (if (or (!= content none) (= command "run")) {
+      # Checking if first argument is file
+      (if (= command "run")
+        (set path (fs:join (fs:dirname path) (index std:args 1)))
+      )
+      (import path)
+    })
   })
 
   (if (= command "test") {
