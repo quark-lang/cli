@@ -1,6 +1,14 @@
 {
   # Printing headline
-  (print (white (+ "Quark " (version))))
+  (import "std.qrk")
+  (let version (fn () {
+    (let file ".quarkrc")
+    (let content (fs:read (fs:join fs:root file)))
+    (let config (parseConfiguration content))
+
+    (return (getProperty config "version"))
+  }))
+  (print (white (++ "Quark " (version))))
   (print (gray "An interpreted Lisp programming language written in Typescript.\n"))
   (print "Website:" "https://quark-lang.dev/")
   (print "Repository:" "https://github/quark-lang/\n")

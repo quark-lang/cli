@@ -1,5 +1,5 @@
 {
-  (import "split.qrk")
+  (import "list/split/split.qrk")
   (print "Installing script")
 
   (let script_path (fs:join fs:cwd (index std:args 1)))
