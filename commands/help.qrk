@@ -1,6 +1,6 @@
 {
   # Printing headline
-  (import "std.qrk")
+  (import "https://deno.land/std@0.83.0/fmt/colors.ts")
   (let version (fn () {
     (let file ".quarkrc")
     (let content (fs:read (fs:join fs:root file)))
