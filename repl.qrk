@@ -1,6 +1,6 @@
 {
   (let repl (fn (version) {
-    (print "Quark" version)
+    (print (gray (++ "Quark " version)))
     (while 1 {
       (let code (input ">>> "))
       (std:exec code)
