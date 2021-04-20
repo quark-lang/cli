@@ -1,9 +1,12 @@
 {
   (let repl (fn (version) {
     (print (gray (++ "Quark " version)))
+    (let stack none)
     (while 1 {
       (let code (input ">>> "))
-      (std:exec code)
+      (let res (std:exec code stack))
+      (print (index res 0))
+      (set stack (index res 1))
     })
   }))
 }
