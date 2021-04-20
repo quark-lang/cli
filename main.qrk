@@ -4,13 +4,6 @@
   (import "std.qrk")
   (import "operators.qrk")
 
-  (if (or (= command "update") (= command "upgrade")) {
-    (let latestRelease quark:release)
-    (if (!= version latestRelease) {
-      (print "New release found:" latestRelease)
-    } (return (print "No new releases found...")))
-  })
-
   (let version (fn () {
     (let file ".quarkrc")
     (let content (fs:read (fs:join fs:root file)))
@@ -18,6 +11,13 @@
 
     (return (getProperty config "version"))
   }))
+
+  (if (or (= command "update") (= command "upgrade")) {
+    (let latestRelease quark:release)
+    (if (!= (version) latestRelease) {
+      (print "New release found:" latestRelease)
+    } (return (print "No new releases found...")))
+  })
 
   # Checking if command is not defined and returning REPL
   (if (or (= command none) (= command "repl")) {
