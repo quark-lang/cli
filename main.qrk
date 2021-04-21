@@ -3,6 +3,8 @@
   (let command (index std:args 0))
   (import "std.qrk")
   (import "operators.qrk")
+  (import "test.ts")
+  (import "https://deno.land/std@0.83.0/fmt/colors.ts")
 
   (let version (fn () {
     (let file ".quarkrc")
@@ -13,10 +15,24 @@
   }))
 
   (if (or (= command "update") (= command "upgrade")) {
-    (let latestRelease quark:release)
-    (if (!= (version) latestRelease) {
-      (print "New release found:" latestRelease)
-    } (return (print "No new releases found...")))
+    (let quark:path (env "QUARK"))
+    (let quark:std (fs:join quark:path "std"))
+    (let quark:cli (fs:join quark:path "cli"))
+
+    (run "git fetch --all" quark:path)
+    (run "git reset --hard origin/master" quark:path)
+    (run "git pull -f --no-rebase origin master" quark:path)
+
+    (run "git fetch --all" quark:std)
+    (run "git reset --hard origin/master" quark:std)
+    (run "git pull -f --no-rebase origin master" quark:std)
+
+    (run "git fetch --all" quark:cli)
+    (run "git reset --hard origin/master" quark:cli)
+    (run "git pull -f --no-rebase origin master" quark:cli)
+
+    (let commit (run "git rev-parse --short HEAD~2" quark:path))
+    (print (gray "Updated Quark to commit") (bold (trim commit)) (gray "on branch master."))
   })
 
   # Checking if command is not defined and returning REPL
