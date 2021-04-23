@@ -3,8 +3,7 @@
   (let command (index std:args 0))
   (import "std.qrk")
   (import "operators.qrk")
-  (import "test.ts")
-  (import "https://deno.land/std@0.83.0/fmt/colors.ts")
+  (import "test.js")
 
   (let version (fn () {
     (let file ".quarkrc")
