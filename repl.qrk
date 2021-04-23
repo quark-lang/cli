@@ -3,10 +3,12 @@
     (print (gray (++ "Quark " version)))
     (let stack none)
     (while 1 {
-      (let code (input ">>> "))
-      (let res (std:exec code stack))
-      (print (index res 0))
-      (set stack (index res 1))
+      (let code (input "> "))
+      (if (!= code "") {
+        (let res (std:exec code stack))
+        (print (index res 0))
+        (set stack (index res 1))
+      })
     })
   }))
 }
